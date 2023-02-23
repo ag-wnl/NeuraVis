@@ -55,15 +55,33 @@ while(True):
 
         # predict the image
         predicted_prob = model.predict(img)
+        # print(type(predicted_prob))
+        # print(predicted_prob[0])
+        # print(np.amax(predicted_prob[0]))
 
+        confidence = np.amax(predicted_prob[0])
+        confidence = confidence*100
+        # font = cv2.FONT_HERSHEY_SIMPLEX
+        # name = labels[predicted_prob[0].argmax()]
+        # color = (255, 255, 255)
+        # stroke = 2
+        # cv2.putText(frame, f'({name})', (x,y-8),
+        #     font, 1, color, stroke, cv2.LINE_AA)
+
+        if confidence >= 80:
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            name = labels[predicted_prob[0].argmax()]
+            color = (255, 0, 255)
+            stroke = 2
+            cv2.putText(frame, f'({name})', (x,y-8),
+                font, 1, color, stroke, cv2.LINE_AA)
         
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        name = labels[predicted_prob[0].argmax()]
-        color = (255, 0, 255)
-        stroke = 2
-        cv2.putText(frame, f'({name})', (x,y-8),
-            font, 1, color, stroke, cv2.LINE_AA)
-
+        elif confidence < 80:
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            color = (255, 0, 255)
+            stroke = 2
+            cv2.putText(frame, "Unknown", (x,y-8),
+                font, 1, color, stroke, cv2.LINE_AA)
         
         cv2.imshow("Image", frame)    
         if cv2.waitKey(20) & 0xFF == ord('q'):

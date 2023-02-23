@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
 
 import tensorflow as tf
 from tensorflow import keras
@@ -79,8 +80,6 @@ model.fit(train_generator,
 model.save(
     'transfer_learning_trained' +
     '_face_cnn_model.h5')
-
-import pickle
 
 class_dictionary = train_generator.class_indices
 class_dictionary = {
