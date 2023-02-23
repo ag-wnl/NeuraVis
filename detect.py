@@ -1,10 +1,13 @@
+import os
 import numpy as np
 import cv2
 import pickle
+import uuid
 
 face_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_default.xml')
 # eye_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_eye.xml')
 # smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
+#https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/viola-cvpr-01.pdf   -> haarcascades
 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -16,10 +19,12 @@ with open("labels.pickle", 'rb') as f:
 	labels = {v:k for k,v in og_labels.items()}
 
 cap = cv2.VideoCapture(0)
+tot=0
 
 while(True):
     
 	ret, frame = cap.read()
+	cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
 	gray  = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
 	for (x, y, w, h) in faces:
@@ -34,16 +39,30 @@ while(True):
 			stroke = 2
 			cv2.putText(frame, name, (x,y), font, 2, color, stroke, cv2.LINE_AA)
 
-
+		
 		# if not in database then deal with this part of code
-		elif conf<=60:
+		elif conf<75:
+
+			
 			font = cv2.FONT_HERSHEY_PLAIN
 			color = (255, 255, 255)
 			stroke = 2
 			cv2.putText(frame, "Unknown", (x,y), font, 3, color, stroke, cv2.LINE_AA)
 
-		img_item = "7.png"	
-		cv2.imwrite(img_item, roi_color)
+			
+			f_path = './unknown_people'
+			p_id = uuid.uuid1()
+			u_id = str(p_id)
+			cnt = 15
+			ori = "unknown_person_.png"
+			res = ori[ : cnt] + u_id + ori[cnt : ]
+			# img_item = "unknown_person_.png"	
+			if tot%70==0: 
+					cv2.imwrite(os.path.join(f_path, res), roi_color) 
+			
+			tot+=1
+
+
 		color = (255, 0, 0) 
 		stroke = 2
 		end_cord_x = x + w
