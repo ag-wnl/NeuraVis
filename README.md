@@ -15,12 +15,12 @@ A Computer Vision application for smart security systems utilising facial recogn
 To run this project execute the following commands in the terminal
 
 ```bash
-  python detect_2.python
+  python detect_2.py
   #for recognition using CNN model
 ```
 
 ```bash
-  python detect.python
+  python detect.py
   #for recognition using haarcascade 
 ```
 
